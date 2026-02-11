@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 const roles = [
@@ -88,7 +88,7 @@ function FloatingOrb({
 }
 
 function Streak({ delay, left }: { delay: number; left: string }) {
-  const randomDelayRef = useRef(Math.random() * 6 + 3);
+  const randomDelay = useMemo(() => Math.random() * 6 + 3, []);
   
   return (
     <motion.div
@@ -100,7 +100,7 @@ function Streak({ delay, left }: { delay: number; left: string }) {
         duration: 2.8,
         delay,
         repeat: Infinity,
-        repeatDelay: randomDelayRef.current,
+        repeatDelay: randomDelay,
         ease: "linear",
       }}
     />

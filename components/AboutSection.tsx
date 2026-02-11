@@ -28,7 +28,6 @@ const AboutSection = () => {
           transition={{ duration: 0.6 }}
         >
           <p className="font-mono text-sm text-primary tracking-widest uppercase mb-2">
-            // about me
           </p>
           <h2 className="text-3xl md:text-4xl font-bold mb-12">
             Building the <span className="text-gradient">Future</span> of Web
