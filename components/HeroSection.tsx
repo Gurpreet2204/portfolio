@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 const roles = [
@@ -87,20 +87,36 @@ function FloatingOrb({
   );
 }
 
-function Streak({ delay, left }: { delay: number; left: string }) {
-  const randomDelay = useMemo(() => Math.random() * 6 + 3, []);
-  
+
+const streakRepeatDelays = [0, 1.5, 3.2, 0.8, 2.1, 4.5].map(
+  () => Math.random() * 6 + 3
+);
+
+function Streak({
+  delay,
+  left,
+  repeatDelay,
+}: {
+  delay: number;
+  left: string;
+  repeatDelay: number;
+}) {
   return (
     <motion.div
       className="absolute top-0 w-[1px] pointer-events-none"
-      style={{ left, background: "linear-gradient(to bottom, transparent, rgba(139,92,246,0.6), transparent)", height: 120 }}
+      style={{
+        left,
+        background:
+          "linear-gradient(to bottom, transparent, rgba(139,92,246,0.6), transparent)",
+        height: 120,
+      }}
       initial={{ y: -120, opacity: 0 }}
       animate={{ y: "110vh", opacity: [0, 1, 1, 0] }}
       transition={{
         duration: 2.8,
         delay,
         repeat: Infinity,
-        repeatDelay: randomDelay,
+        repeatDelay,
         ease: "linear",
       }}
     />
@@ -128,9 +144,16 @@ function AnimatedCounter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const [val, setVal] = useState(0);
 
   useEffect(() => {
-    const controls = animate(count, to, { duration: 2, delay: 1.4, ease: "easeOut" });
+    const controls = animate(count, to, {
+      duration: 2,
+      delay: 1.4,
+      ease: "easeOut",
+    });
     const unsub = rounded.on("change", setVal);
-    return () => { controls.stop(); unsub(); };
+    return () => {
+      controls.stop();
+      unsub();
+    };
   }, [to, count, rounded]);
 
   return (
@@ -177,17 +200,49 @@ const HeroSection = () => {
         }}
       />
 
-      <FloatingOrb color="rgba(139,92,246,0.4)"  size={500} x="60%" y="-10%" duration={9}  delay={0} />
-      <FloatingOrb color="rgba(6,182,212,0.25)"  size={380} x="-5%" y="40%"  duration={11} delay={2} />
-      <FloatingOrb color="rgba(236,72,153,0.18)" size={280} x="75%" y="65%"  duration={13} delay={1} />
-      <FloatingOrb color="rgba(245,158,11,0.12)" size={200} x="20%" y="75%"  duration={8}  delay={3} />
+      <FloatingOrb
+        color="rgba(139,92,246,0.4)"
+        size={500}
+        x="60%"
+        y="-10%"
+        duration={9}
+        delay={0}
+      />
+      <FloatingOrb
+        color="rgba(6,182,212,0.25)"
+        size={380}
+        x="-5%"
+        y="40%"
+        duration={11}
+        delay={2}
+      />
+      <FloatingOrb
+        color="rgba(236,72,153,0.18)"
+        size={280}
+        x="75%"
+        y="65%"
+        duration={13}
+        delay={1}
+      />
+      <FloatingOrb
+        color="rgba(245,158,11,0.12)"
+        size={200}
+        x="20%"
+        y="75%"
+        duration={8}
+        delay={3}
+      />
 
       {streaks.map((s, i) => (
-        <Streak key={i} delay={s.delay} left={s.left} />
+        <Streak
+          key={i}
+          delay={s.delay}
+          left={s.left}
+          repeatDelay={streakRepeatDelays[i]}
+        />
       ))}
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -205,7 +260,11 @@ const HeroSection = () => {
               key={word}
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 * i, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.7,
+                delay: 0.15 * i,
+                ease: [0.22, 1, 0.36, 1],
+              }}
               className="inline-block mr-4"
             >
               {word}
@@ -217,7 +276,11 @@ const HeroSection = () => {
               key={word}
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 + 0.15 * i, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.7,
+                delay: 0.3 + 0.15 * i,
+                ease: [0.22, 1, 0.36, 1],
+              }}
               className={`inline-block mr-4 ${i === 0 ? "text-gradient" : ""}`}
             >
               {word}
@@ -235,7 +298,11 @@ const HeroSection = () => {
             {role}
             <motion.span
               animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
+              transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
               className="inline-block w-0.5 h-5 bg-violet-400 ml-0.5 align-middle"
             />
           </span>
@@ -266,8 +333,13 @@ const HeroSection = () => {
           >
             <motion.span
               className="absolute inset-0 rounded-lg"
-              style={{ background: "linear-gradient(135deg, #7c3aed, #6366f1, #8b5cf6)" }}
-              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              style={{
+                background:
+                  "linear-gradient(135deg, #7c3aed, #6366f1, #8b5cf6)",
+              }}
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
             />
             <span className="relative flex items-center gap-2">
@@ -297,7 +369,9 @@ const HeroSection = () => {
               <p className="text-2xl md:text-3xl font-bold text-gradient">
                 <AnimatedCounter to={value} suffix={suffix} />
               </p>
-              <p className="text-xs text-muted-foreground font-mono mt-1">{label}</p>
+              <p className="text-xs text-muted-foreground font-mono mt-1">
+                {label}
+              </p>
             </div>
           ))}
         </motion.div>
