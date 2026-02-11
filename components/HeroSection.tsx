@@ -88,6 +88,8 @@ function FloatingOrb({
 }
 
 function Streak({ delay, left }: { delay: number; left: string }) {
+  const randomDelayRef = useRef(Math.random() * 6 + 3);
+  
   return (
     <motion.div
       className="absolute top-0 w-[1px] pointer-events-none"
@@ -98,7 +100,7 @@ function Streak({ delay, left }: { delay: number; left: string }) {
         duration: 2.8,
         delay,
         repeat: Infinity,
-        repeatDelay: Math.random() * 6 + 3,
+        repeatDelay: randomDelayRef.current,
         ease: "linear",
       }}
     />
@@ -129,7 +131,7 @@ function AnimatedCounter({ to, suffix = "" }: { to: number; suffix?: string }) {
     const controls = animate(count, to, { duration: 2, delay: 1.4, ease: "easeOut" });
     const unsub = rounded.on("change", setVal);
     return () => { controls.stop(); unsub(); };
-  }, []);
+  }, [to, count, rounded]);
 
   return (
     <span>
@@ -290,7 +292,7 @@ const HeroSection = () => {
           transition={{ delay: 1.3, duration: 0.7 }}
           className="flex justify-center gap-10"
         >
-          {stats.map(({ value, suffix, label }, i) => (
+          {stats.map(({ value, suffix, label }) => (
             <div key={label} className="text-center">
               <p className="text-2xl md:text-3xl font-bold text-gradient">
                 <AnimatedCounter to={value} suffix={suffix} />
